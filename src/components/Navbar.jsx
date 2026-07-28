@@ -14,6 +14,7 @@ export const Navbar = () => {
     { name: "Home", href: "/" },
     { name: "Destinations", href: "/destinations" },
     { name: "My Destinations", href: "/my-destinations" },
+    { name: "Add Destination", href: "/add-destination" },
   ];
 
   const rightNavLinks = [
