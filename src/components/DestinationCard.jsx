@@ -2,6 +2,8 @@ import React from 'react';
 import { Card, Button, Chip } from "@heroui/react";
 import { Pin, Calendar, Clock, ArrowRight } from '@gravity-ui/icons';
 import Link from 'next/link';
+import { ArrowRightCircle } from 'lucide';
+import { RiExternalLinkLine } from 'react-icons/ri';
 
 const DestinationCard = ({ destination }) => {
   const {
@@ -86,8 +88,9 @@ const DestinationCard = ({ destination }) => {
           color="primary" 
           radius="full" 
           size="md"
-          endContent={<ArrowRight className="w-4 h-4" />}
-          className="font-semibold shadow-sm"
+         
+          endContent={<ArrowRightCircle className="w-4 h-4" />}
+          className="font-semibold shadow-sm p-4 rounded-2xl bg-cyan-300"
         >
           Book Now
         </Link>
