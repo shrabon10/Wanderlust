@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // Next.js Router
 import { Envelope } from "@gravity-ui/icons";
 import {
   Button,
@@ -13,11 +14,14 @@ import {
   Surface,
   TextArea,
   TextField,
+  ToastActionButton,
 } from "@heroui/react";
 import { BiEdit } from "react-icons/bi";
+import { toast } from "react-toastify";
 
 export function ModalEdit({ destination }) {
-    const {
+  const router = useRouter();
+  const {
     title,
     destinationName,
     country,
@@ -29,32 +33,59 @@ export function ModalEdit({ destination }) {
     description,
     _id
   } = destination;
+
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(category || "");
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const destination = Object.fromEntries(formData.entries());
-    console.log(destination);
+ const onSubmit = async (event) => {
+  event.preventDefault();
 
+  // 1. Guard check: Ensure _id is defined before making the request
+  if (!_id) {
+    console.error("Missing destination ID.");
+    return;
+  }
 
+  setLoading(true);
+
+  const formData = new FormData(event.currentTarget);
+  const updatedData = Object.fromEntries(formData.entries());
+  updatedData.category = selectedCategory;
+
+  try {
     const res = await fetch(`http://localhost:5000/destinations/${_id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(destination)
-      });
-    setIsOpen(false);
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedData),
+    });
 
-    const data = await res.json();
-    console.log(data);
-  };
- 
-
+    if (res.ok) {
+    toast.success("Travel package updated successfully!");
+        
+      setIsOpen(false);
+      
+      // 2. Safe router call (ensures Next.js router exists)
+      if (typeof router?.refresh === "function") {
+        router.refresh();
+        
+      }
+    } else {
+      // Handle server error responses (e.g. 400, 404, 500)
+      const errorData = await res.json().catch(() => ({}));
+      console.error("Failed to update destination:", res.status, errorData);
+    }
+  } catch (error) {
+    console.error("Error submitting form:", error);
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <>
-      <div className="flex justify-end mx-auto">
+      
         <button
           type="button"
           onClick={() => setIsOpen(true)}
@@ -63,7 +94,7 @@ export function ModalEdit({ destination }) {
           <BiEdit className="w-4 h-4 text-slate-500 group-hover:text-slate-900 dark:group-hover:text-slate-100 transition-colors" />
           <span>Edit</span>
         </button>
-      </div>
+     
 
       <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
         <Modal.Backdrop>
@@ -85,7 +116,7 @@ export function ModalEdit({ destination }) {
                   <form onSubmit={onSubmit} className="p-4 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="md:col-span-2">
-                        <TextField defaultValue={destinationName} isRequired>
+                        <TextField defaultValue={destinationName} name="destinationName" isRequired>
                           <Label>Destination Name</Label>
                           <Input placeholder="Bali Paradise" className="rounded-2xl" />
                           <FieldError />
@@ -99,42 +130,34 @@ export function ModalEdit({ destination }) {
                       </TextField>
 
                       <div>
-                        <Select defaultValue={category} name="category" isRequired className="w-full" placeholder="Select category">
-                          <Label>Category</Label>
-                          <Select.Trigger className="rounded-2xl">
-                            <Select.Value />
-                            <Select.Indicator />
-                          </Select.Trigger>
-                          <Select.Popover>
-                            <ListBox>
-                              <ListBox.Item id="Beach" textValue="Beach">
-                                Beach
-                                <ListBox.ItemIndicator />
-                              </ListBox.Item>
-                              <ListBox.Item id="Mountain" textValue="Mountain">
-                                Mountain
-                                <ListBox.ItemIndicator />
-                              </ListBox.Item>
-                              <ListBox.Item id="City" textValue="City">
-                                City
-                                <ListBox.ItemIndicator />
-                              </ListBox.Item>
-                              <ListBox.Item id="Adventure" textValue="Adventure">
-                                Adventure
-                                <ListBox.ItemIndicator />
-                              </ListBox.Item>
-                              <ListBox.Item id="Cultural" textValue="Cultural">
-                                Cultural
-                                <ListBox.ItemIndicator />
-                              </ListBox.Item>
-                              <ListBox.Item id="Luxury" textValue="Luxury">
-                                Luxury
-                                <ListBox.ItemIndicator />
-                              </ListBox.Item>
-                            </ListBox>
-                          </Select.Popover>
-                        </Select>
-                      </div>
+  <Select 
+    selectedKeys={selectedCategory ? [selectedCategory] : []} 
+    onSelectionChange={(keys) => {
+      const selectedValue = Array.from(keys)[0];
+      setSelectedCategory(selectedValue || "");
+    }}
+    name="category" 
+    isRequired 
+    className="w-full" 
+    placeholder="Select category"
+  >
+    <Label>category</Label>
+    <Select.Trigger className="rounded-2xl">
+      <Select.Value />
+      <Select.Indicator />
+    </Select.Trigger>
+    <Select.Popover>
+      <ListBox>
+        <ListBox.Item id="Beach" textValue="Beach">Beach</ListBox.Item>
+        <ListBox.Item id="Mountain" textValue="Mountain">Mountain</ListBox.Item>
+        <ListBox.Item id="City" textValue="City">City</ListBox.Item>
+        <ListBox.Item id="Adventure" textValue="Adventure">Adventure</ListBox.Item>
+        <ListBox.Item id="Cultural" textValue="Cultural">Cultural</ListBox.Item>
+        <ListBox.Item id="Luxury" textValue="Luxury">Luxury</ListBox.Item>
+      </ListBox>
+    </Select.Popover>
+  </Select>
+</div>
 
                       <TextField defaultValue={price} name="price" type="number" isRequired>
                         <Label>Price (USD)</Label>
@@ -157,13 +180,9 @@ export function ModalEdit({ destination }) {
                       </div>
 
                       <div className="md:col-span-2">
-                        <TextField defaultValue={imageUrl}  name="imageUrl" isRequired>
+                        <TextField defaultValue={imageUrl} name="imageUrl" isRequired>
                           <Label>Image URL</Label>
-                          <Input
-                            type="url"
-                            placeholder="https://example.com/bali-paradise.jpg"
-                            className="rounded-2xl"
-                          />
+                          <Input type="url" placeholder="https://example.com/bali.jpg" className="rounded-2xl" />
                           <FieldError />
                         </TextField>
                       </div>
@@ -171,10 +190,7 @@ export function ModalEdit({ destination }) {
                       <div className="md:col-span-2">
                         <TextField defaultValue={description} name="description" isRequired>
                           <Label>Description</Label>
-                          <TextArea
-                            placeholder="Describe the travel experience..."
-                            className="rounded-3xl"
-                          />
+                          <TextArea placeholder="Describe the travel experience..." className="rounded-3xl" />
                           <FieldError />
                         </TextField>
                       </div>
@@ -183,9 +199,10 @@ export function ModalEdit({ destination }) {
                     <Button
                       type="submit"
                       variant="outline"
+                      disabled={loading}
                       className="rounded-full w-full bg-cyan-500 text-white mt-4"
                     >
-                      Save Changes
+                      {loading ? "Saving..." : "Save Changes"}
                     </Button>
                   </form>
                 </Surface>

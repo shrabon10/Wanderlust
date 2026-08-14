@@ -27,10 +27,13 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
+       
+          
         <Navbar />
         {children}
         <Footer />
         <ToastContainer/>
+        
       </body>
       
       

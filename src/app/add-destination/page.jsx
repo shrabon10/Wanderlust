@@ -1,6 +1,8 @@
 'use client';
 
 import { Button, FieldError, Input, Label, ListBox, TextArea, TextField, Select } from '@heroui/react';
+import { redirect } from 'next/navigation';
+import { Router } from 'next/router';
 import React from 'react';
 import { toast } from 'react-toastify';
 
@@ -23,8 +25,11 @@ const Page = () => {
       const data = await res.json();
       console.log(data);
       toast.success('Travel package added successfully!');
+      redirect('/destinations');
+      console.error('Failed to add destination:', error);
     } catch (error) {
       console.error('Failed to add destination:', error);
+      toast.error('Failed to add travel package. Please try again.');
     }
   }; 
   return (

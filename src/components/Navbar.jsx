@@ -17,28 +17,21 @@ export const Navbar = () => {
     { name: "Add Destination", href: "/add-destination" },
   ];
 
-  const rightNavLinks = [
-    { name: "Profile", href: "/profile" },
-  ];
+  const rightNavLinks = [{ name: "Profile", href: "/profile" }];
 
   const allLinks = [...leftNavLinks, ...rightNavLinks];
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background/70 backdrop-blur-md border-b border-default-200/50">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        
         {/* Mobile Hamburger Menu Toggle */}
         <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          onClick={() => setIsMenuOpen((prev) => !prev)}
           className="md:hidden p-2 text-default-600 hover:text-foreground focus:outline-none"
           aria-label="Toggle Navigation Menu"
+          type="button"
         >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {isMenuOpen ? (
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             ) : (
@@ -111,27 +104,27 @@ export const Navbar = () => {
             <Separator orientation="vertical" className="bg-default-200" />
           </div>
 
-          {/* Auth Action Buttons */}
+          {/* Auth Action Buttons — Link wraps Button instead of as={Link} */}
           <div className="flex items-center gap-2">
-            <Button
-              as={Link}
-              href="/login"
-              variant="light"
-              size="sm"
-              className="font-medium text-default-700 rounded-full hover:bg-default-100 hidden sm:inline-flex"
-            >
-              Login
-            </Button>
-            <Button
-              as={Link}
-              href="/signup"
-              color="primary"
-              size="sm"
-              radius="full"
-              className="font-medium shadow-md shadow-primary/20 hover:shadow-primary/40 transition-shadow"
-            >
-              Sign Up
-            </Button>
+            <Link href="/login" className="hidden sm:inline-flex">
+              <Button
+                variant="light"
+                size="sm"
+                className="font-medium text-default-700 rounded-full hover:bg-default-100"
+              >
+                Login
+              </Button>
+            </Link>
+            <Link href="/signup">
+              <Button
+                color="primary"
+                size="sm"
+                radius="full"
+                className="font-medium shadow-md shadow-primary/20 hover:shadow-primary/40 transition-shadow"
+              >
+                Sign Up
+              </Button>
+            </Link>
           </div>
         </div>
       </nav>
@@ -165,17 +158,11 @@ export const Navbar = () => {
           </div>
 
           <div className="flex flex-col gap-2 pt-1">
-            <Button
-              as={Link}
-              href="/login"
-              variant="flat"
-              color="default"
-              fullWidth
-              onClick={() => setIsMenuOpen(false)}
-              className="font-medium"
-            >
-              Login
-            </Button>
+            <Link href="/login" onClick={() => setIsMenuOpen(false)}>
+              <Button variant="flat" color="default" fullWidth className="font-medium">
+                Login
+              </Button>
+            </Link>
           </div>
         </div>
       )}
