@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Button, Input, Separator } from "@heroui/react";
+import Link from "next/link";
 
 export const Banner = () => {
   return (
@@ -30,14 +31,19 @@ export const Banner = () => {
 
         {/* Action Buttons */}
         <div className="flex flex-wrap justify-center gap-4 pt-2">
-          <Button
-            color="primary"
-            size="lg"
-            radius="full"
-            className="font-semibold px-8 uppercase tracking-wider text-sm shadow-lg shadow-primary/30"
-          >
-            Explore Now
-          </Button>
+  <Link href="/destinations">
+    <Button
+      color="primary"
+      size="lg"
+      radius="full"
+      className="font-semibold px-8 uppercase tracking-wider text-sm shadow-lg shadow-primary/30"
+    >
+      Explore Now
+    </Button>
+  </Link>
+
+          
+        
 
           <Button
             variant="bordered"

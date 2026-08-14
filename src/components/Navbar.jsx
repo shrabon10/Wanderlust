@@ -4,9 +4,37 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button, Separator } from "@heroui/react";
+import { Avatar, Button, Dropdown, DropdownItem, DropdownSection, DropdownTrigger, Separator } from "@heroui/react";
+import { LogIn, UserPlus } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "react-toastify";
 
 export const Navbar = () => {
+
+    const { 
+        data: session, 
+        isPending, //loading state
+        
+    } = authClient.useSession() 
+
+    const user = session?.user;
+    console.log(user);
+
+
+    const handleLogout = async () =>{
+        await authClient.signOut();
+
+        if(handleLogout){
+            toast.success('Logged Out Successfully!', {
+                position: "top-center",
+                richColors: true,
+              });
+        }
+    }
+    
+
+
+
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -105,27 +133,53 @@ export const Navbar = () => {
           </div>
 
           {/* Auth Action Buttons — Link wraps Button instead of as={Link} */}
-          <div className="flex items-center gap-2">
-            <Link href="/login" className="hidden sm:inline-flex">
-              <Button
-                variant="light"
-                size="sm"
-                className="font-medium text-default-700 rounded-full hover:bg-default-100"
-              >
-                Login
-              </Button>
-            </Link>
-            <Link href="/signup">
-              <Button
-                color="primary"
-                size="sm"
-                radius="full"
-                className="font-medium shadow-md shadow-primary/20 hover:shadow-primary/40 transition-shadow"
-              >
-                Sign Up
-              </Button>
-            </Link>
-          </div>
+          <div className="flex items-center gap-3">
+
+      {
+        user ? <>
+        <li>
+            
+                <Avatar>
+        <Avatar.Image referrerPolicy="no-referrer" alt="John Doe" src={user?.image} />
+        <Avatar.Fallback>{user?.name.charAt(0)} 
+            name={user?.name || 'User'}
+        </Avatar.Fallback>
+      </Avatar>     
+        </li>
+        <li>
+        <Button onClick={handleLogout} variant="danger" className={'rounded-2xl'}>
+            Log-Out
+        </Button>
+        </li>
+        
+        </>
+        :
+        <>
+        <Link href="/login">
+      <Button
+        variant="bordered"
+        size="md"
+        radius="full"
+        startContent={<LogIn className="w-4 h-4 text-primary transition-transform group-hover:translate-x-0.5" />}
+        className="group font-semibold text-sm border-default-300 hover:border-primary text-default-800 hover:text-primary px-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+      >
+        Log In
+      </Button>
+    </Link>  
+      <Link href="/signup">
+        <Button
+          color="primary"
+          size="md"
+          radius="full"
+          endContent={<UserPlus className="w-4 h-4" />}
+          className="font-medium text-sm px-5 bg-gradient-to-r from-primary to-primary-600 text-white shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+        >
+          Sign Up
+        </Button>
+      </Link>
+        </>
+      }
+    </div>
         </div>
       </nav>
 
