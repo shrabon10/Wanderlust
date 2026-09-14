@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, Button, Chip } from "@heroui/react";
 import { ModalEdit } from '@/components/ModalEdit';
@@ -190,6 +191,9 @@ const DestinationDetailsPage = async ({ params }) => {
               radius="full"
               endContent={<ArrowRight className="w-5 h-5" />}
               className="w-full font-bold shadow-lg shadow-primary/25 hover:scale-[1.02] transition-transform"
+
+
+              
             >
               Book Destination
             </Button>

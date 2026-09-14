@@ -41,7 +41,7 @@ export const Navbar = () => {
   const leftNavLinks = [
     { name: "Home", href: "/" },
     { name: "Destinations", href: "/destinations" },
-    { name: "My Destinations", href: "/my-destinations" },
+    { name: "My Bookings", href: "/my-booking" },
     { name: "Add Destination", href: "/add-destination" },
   ];
 
