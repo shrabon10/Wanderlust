@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, Button, Chip } from "@heroui/react";
 import { ModalEdit } from '@/components/ModalEdit';
@@ -15,6 +14,8 @@ import {
   ShieldCheck 
 } from '@gravity-ui/icons';
 import { DeletDestinations } from '@/components/DeletDestinations';
+
+import BookingButton from '@/components/BookingButton';
 
 const DestinationDetailsPage = async ({ params }) => {
   const { id } = await params;
@@ -50,8 +51,8 @@ const DestinationDetailsPage = async ({ params }) => {
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
       <div className='flex gap-5 justify-end'>
-        <ModalEdit destination={destination} key={departureDate._id} /> 
-      <DeletDestinations destination={destination} key={departureDate._id}/> 
+        <ModalEdit destination={destination} />  
+<DeletDestinations destination={destination} />
         </div> 
       
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
@@ -185,18 +186,7 @@ const DestinationDetailsPage = async ({ params }) => {
               </div>
             </div>
 
-            <Button 
-              color="primary" 
-              size="lg" 
-              radius="full"
-              endContent={<ArrowRight className="w-5 h-5" />}
-              className="w-full font-bold shadow-lg shadow-primary/25 hover:scale-[1.02] transition-transform"
-
-
-              
-            >
-              Book Destination
-            </Button>
+            <BookingButton destination={destination} />
 
             <p className="text-center text-xs text-default-400">
               🔒 256-bit Secure Checkout • No hidden fees
