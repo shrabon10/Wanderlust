@@ -12,7 +12,7 @@ export function DeletDestinations({ destination }) {
   } = destination;
 
   const handleDelete = () => {
-    const res = fetch(`http://localhost:5000/destinations/${_id}`, {
+    const res = fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/destinations/${_id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

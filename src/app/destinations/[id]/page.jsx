@@ -19,7 +19,7 @@ import BookingButton from '@/components/BookingButton';
 
 const DestinationDetailsPage = async ({ params }) => {
   const { id } = await params;
-  const SERVER_URL ='http://localhost:5000';
+  const SERVER_URL =`${process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5000'}`;
 
   const res = await fetch(`${SERVER_URL}/destinations/${id}`, {
     next: { revalidate: 60 },

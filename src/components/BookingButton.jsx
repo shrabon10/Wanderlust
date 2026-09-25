@@ -1,24 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import {
-  Button,
-  Input,
-  Label,
-  Modal,
-  Surface,
-  TextField,
-} from "@heroui/react";
-import {
-  ArrowRight,
-  Calendar,
-  Clock,
-  Envelope,
+    ArrowRight,
+    Calendar,
+    Clock,
+    Envelope,
 } from "@gravity-ui/icons";
+import {
+    Button,
+    Input,
+    Label,
+    Modal,
+    Surface,
+    TextField,
+} from "@heroui/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
-const SERVER_URL = "http://localhost:5000";
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || "";
 
 const BookingButton = ({ destination }) => {
   const router = useRouter();
